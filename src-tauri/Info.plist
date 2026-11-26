@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- 声明支持中文：系统据此返回其他应用的中文显示名（如「系统设置」「企业微信」） -->
+	<key>CFBundleDevelopmentRegion</key>
+	<string>zh_CN</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>zh_CN</string>
+		<string>en</string>
+	</array>
+	<!-- 菜单栏应用：启动时不在 Dock 闪现图标 -->
+	<key>LSUIElement</key>
+	<true/>
+</dict>
+</plist>

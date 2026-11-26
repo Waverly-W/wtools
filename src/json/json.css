@@ -1,0 +1,223 @@
+/* JSON 工具窗口样式（格式化页、对比页共用） */
+
+:root {
+  --j-key: #a3158f;
+  --j-str: #1a7f37;
+  --j-num: #0550ae;
+  --j-kw: #cf222e;
+  --j-active-line: rgba(0, 0, 0, 0.035);
+  --j-selection: rgba(10, 102, 255, 0.2);
+  --j-match: rgba(10, 102, 255, 0.12);
+  --j-add-bg: rgba(26, 127, 55, 0.12);
+  --j-add-text: rgba(26, 127, 55, 0.3);
+  --j-del-bg: rgba(207, 34, 46, 0.1);
+  --j-del-text: rgba(207, 34, 46, 0.28);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --j-key: #e38ad6;
+    --j-str: #7ee08f;
+    --j-num: #79b8ff;
+    --j-kw: #ff8b85;
+    --j-active-line: rgba(255, 255, 255, 0.04);
+    --j-selection: rgba(76, 148, 255, 0.35);
+    --j-match: rgba(76, 148, 255, 0.2);
+    --j-add-bg: rgba(63, 185, 80, 0.14);
+    --j-add-text: rgba(63, 185, 80, 0.35);
+    --j-del-bg: rgba(248, 81, 73, 0.13);
+    --j-del-text: rgba(248, 81, 73, 0.35);
+  }
+}
+
+body {
+  background: var(--surface);
+}
+
+.app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 顶部标题栏、工具栏：外观来自 components.css 的 .bar */
+header.bar {
+  background: var(--bg);
+}
+
+main {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+.pane {
+  position: absolute;
+  inset: 0;
+}
+.pane.hidden {
+  display: none;
+}
+
+.tab {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.toolbar {
+  flex-wrap: wrap;
+  gap: var(--sp-1h);
+  font-size: var(--fs-sm);
+}
+
+.editor {
+  flex: 1;
+  min-height: 0;
+}
+
+.status {
+  gap: var(--sp-1h);
+  padding: 0 var(--sp-3);
+  background: var(--bg);
+}
+.status .link {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+}
+
+/* 对比页 */
+.labels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  font-size: var(--fs-xs);
+  color: var(--text-secondary);
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+.labels span {
+  padding: 3px var(--sp-3);
+}
+.labels span + span {
+  border-left: 1px solid var(--border);
+}
+.merge {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+.merge .cm-mergeView {
+  flex: 1;
+  height: 100%;
+}
+.cm-mergeView .cm-merge-a .cm-changedLine,
+.cm-mergeView .cm-deletedChunk {
+  background-color: var(--j-del-bg) !important;
+}
+.cm-mergeView .cm-merge-b .cm-changedLine,
+.cm-mergeView .cm-inlineChangedLine {
+  background-color: var(--j-add-bg) !important;
+}
+.cm-mergeView .cm-merge-a .cm-changedText,
+.cm-mergeView .cm-deletedChunk .cm-deletedText {
+  background: var(--j-del-text) !important;
+  border-radius: 2px;
+}
+.cm-mergeView .cm-merge-b .cm-changedText {
+  background: var(--j-add-text) !important;
+  border-radius: 2px;
+}
+.cm-mergeView .cm-changeGutter {
+  width: 3px;
+  padding: 0;
+}
+.cm-mergeView .cm-merge-a .cm-changedLineGutter {
+  background: var(--danger);
+}
+.cm-mergeView .cm-merge-b .cm-changedLineGutter {
+  background: var(--success);
+}
+.cm-collapsedLines {
+  background: var(--bg) !important;
+  color: var(--text-secondary) !important;
+}
+
+.k-added {
+  color: var(--success);
+}
+.k-removed {
+  color: var(--danger);
+}
+.k-changed {
+  color: var(--warning);
+}
+
+.diff-list {
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+}
+.diff-list.open {
+  height: 200px;
+}
+.diff-head {
+  border: 0;
+  background: none;
+  font-size: var(--fs-sm);
+  color: var(--text);
+  text-align: left;
+  padding: var(--sp-1h) var(--sp-3);
+}
+.rows {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 var(--sp-1h) var(--sp-1h);
+}
+.row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  width: 100%;
+  border: 0;
+  background: none;
+  font-size: var(--fs-sm);
+  color: var(--text);
+  text-align: left;
+  padding: var(--sp-1) var(--sp-1h);
+  border-radius: var(--r-sm);
+}
+.row:hover {
+  background: var(--hover);
+}
+.row.sel {
+  background: var(--selected);
+}
+.kind {
+  flex: none;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+}
+.path {
+  flex: none;
+  max-width: 45%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+}
+.vals {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  color: var(--text-secondary);
+}
+.vals .old {
+  color: var(--danger);
+}
+.vals .new {
+  color: var(--success);
+}

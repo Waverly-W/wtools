@@ -1,0 +1,261 @@
+/* 设置窗口布局（控件外观来自 styles/components.css） */
+body {
+  background: var(--bg);
+}
+
+.layout {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 176px;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--sp-4) var(--sp-2);
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+}
+
+/* 侧栏导航：选中用实心强调色（与菜单一致） */
+.sidebar button {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  height: var(--h-md);
+  padding: 0 var(--sp-2);
+  border: 0;
+  border-radius: var(--r-sm);
+  background: none;
+  color: var(--text);
+  font-size: var(--fs-md);
+  text-align: left;
+  cursor: pointer;
+}
+
+.sidebar button:hover {
+  background: var(--hover);
+}
+
+.sidebar button.on {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+main {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  padding: var(--sp-6) var(--sp-6) 40px;
+}
+
+main > * {
+  max-width: 640px;
+}
+
+header {
+  margin-bottom: var(--sp-5);
+}
+
+h1 {
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-semibold);
+}
+
+header p {
+  margin-top: var(--sp-1h);
+  color: var(--text-secondary);
+  font-size: var(--fs-md);
+}
+
+section + section {
+  margin-top: var(--sp-5);
+}
+
+h2 {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--text-secondary);
+  margin: 0 0 var(--sp-2) var(--sp-1);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  min-height: 44px;
+  padding: var(--sp-1h) var(--sp-4);
+}
+
+.row + .row {
+  border-top: 1px solid var(--border);
+}
+
+.row.sub {
+  padding-left: 28px;
+}
+
+.label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.hint.path,
+.hint.mono {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  word-break: break-all;
+}
+
+.note {
+  margin: var(--sp-2) var(--sp-1) 0;
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+}
+
+.ok,
+.err {
+  font-size: var(--fs-sm);
+}
+
+.badge {
+  margin-left: var(--sp-1);
+}
+
+code {
+  font-size: var(--fs-xs);
+}
+
+.btns {
+  display: flex;
+  gap: var(--sp-1h);
+  flex: none;
+}
+
+/* 自定义操作编辑器 */
+.editor {
+  margin-top: var(--sp-3);
+  padding: var(--sp-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.editor label,
+.editor .field {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.editor label.top {
+  align-items: flex-start;
+}
+
+.editor label > span,
+.editor .field > span {
+  width: 64px;
+  flex: none;
+  color: var(--text-secondary);
+}
+
+.editor .input {
+  flex: 1;
+}
+
+.editor .check {
+  color: var(--text);
+}
+
+.editor-btns {
+  display: flex;
+  gap: var(--sp-2);
+}
+
+/* 快捷键录制按钮 */
+.hotkey {
+  min-width: 112px;
+}
+
+.hotkey.empty {
+  color: var(--text-secondary);
+}
+
+.hotkey.recording {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: var(--focus-ring);
+}
+
+/* 系统增强 */
+.feature-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 var(--sp-2) var(--sp-1);
+}
+
+.feature-head h2 {
+  margin: 0;
+}
+
+.feature-head .link {
+  font-size: var(--fs-sm);
+}
+
+.err .link {
+  margin-left: var(--sp-1h);
+}
+
+.range {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex: none;
+}
+
+.range input {
+  width: 160px;
+  accent-color: var(--accent);
+}
+
+.range output {
+  width: 32px;
+  text-align: right;
+  font-size: var(--fs-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+}
+
+.checks {
+  display: flex;
+  gap: var(--sp-3);
+}
+
+.checks .check {
+  color: var(--text);
+}
+
+input[type="color"] {
+  width: 36px;
+  height: var(--h-sm);
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: none;
+  cursor: pointer;
+}
+
+.banner {
+  margin-bottom: var(--sp-3);
+}
+
+/* 列表里的删除按钮 */
+.remove:hover:not(:disabled) {
+  color: var(--danger);
+}

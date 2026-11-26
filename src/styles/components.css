@@ -1,0 +1,459 @@
+/*
+ * wtools 共享组件（所有窗口共用）
+ *
+ * 只用 base.css 里的设计令牌。组件内的局部样式只负责布局（位置、宽度、间距），
+ * 外观（颜色、字号、圆角、高度、阴影）统一在这里定义。
+ */
+
+/* ===================== 按钮 ===================== */
+/* 默认：次要按钮。修饰：.primary 主操作、.danger 危险、.tinted 淡强调、.plain 无边框、.sm 紧凑、.icon 方形图标 */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-1h);
+  flex: none;
+  height: var(--h-md);
+  padding: 0 var(--sp-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--control);
+  color: var(--text);
+  font-size: var(--fs-md);
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color var(--dur) var(--ease);
+}
+/* 悬停 / 按下：在任意底色上叠一层，主按钮、淡强调按钮同样适用 */
+.btn:hover:not(:disabled) {
+  background-image: linear-gradient(var(--hover), var(--hover));
+}
+.btn:active:not(:disabled) {
+  background-image: linear-gradient(var(--pressed), var(--pressed));
+}
+.btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.btn.sm {
+  height: var(--h-sm);
+  padding: 0 var(--sp-2);
+  font-size: var(--fs-sm);
+}
+.btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+.btn.danger {
+  border-color: color-mix(in srgb, var(--danger) 50%, transparent);
+  color: var(--danger);
+}
+.btn.tinted {
+  border-color: transparent;
+  background: var(--selected);
+  color: var(--accent);
+}
+.btn.plain {
+  border-color: transparent;
+  background: none;
+}
+.btn.icon {
+  width: var(--h-md);
+  padding: 0;
+}
+.btn.icon.sm {
+  width: var(--h-sm);
+}
+
+/* 文字链接按钮 */
+.link {
+  border: 0;
+  background: none;
+  padding: 0;
+  color: var(--accent);
+  cursor: pointer;
+}
+.link:hover {
+  text-decoration: underline;
+}
+
+/* ===================== 输入 ===================== */
+.input,
+.select {
+  height: var(--h-md);
+  padding: 0 var(--sp-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+  color: var(--text);
+  font-size: var(--fs-md);
+  outline: none;
+  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.input::placeholder {
+  color: var(--text-tertiary);
+}
+.input:focus,
+.select:focus-visible {
+  border-color: var(--accent);
+  box-shadow: var(--focus-ring);
+}
+textarea.input {
+  height: auto;
+  padding: var(--sp-1h) var(--sp-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+  resize: vertical;
+}
+.select.sm,
+.input.sm {
+  height: var(--h-sm);
+  font-size: var(--fs-sm);
+}
+
+/* 复选框 + 文字 */
+.check {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  font-size: inherit;
+  color: var(--text-secondary);
+}
+.check input {
+  accent-color: var(--accent);
+}
+
+/* 开关 */
+.switch {
+  appearance: none;
+  flex: none;
+  width: 36px;
+  height: 20px;
+  border-radius: var(--r-full);
+  background: var(--border-strong);
+  position: relative;
+  cursor: pointer;
+  transition: background var(--dur) var(--ease);
+}
+.switch::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--dur) var(--ease);
+}
+.switch:checked {
+  background: var(--accent);
+}
+.switch:checked::after {
+  transform: translateX(16px);
+}
+
+.btn:focus-visible,
+.switch:focus-visible,
+.seg button:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* ===================== 分段控件 ===================== */
+/* 容器圆角 8 = 内块 6 + 内边距 2 */
+.seg {
+  display: inline-flex;
+  flex: none;
+  padding: 2px;
+  border-radius: var(--r-md);
+  background: var(--hover);
+}
+.seg button {
+  height: calc(var(--h-sm) - 4px);
+  padding: 0 var(--sp-3);
+  border: 0;
+  border-radius: var(--r-sm);
+  background: none;
+  color: var(--text-secondary);
+  font-size: var(--fs-sm);
+  cursor: pointer;
+}
+.seg button.on {
+  background: var(--control-on);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ===================== 胶囊 / 徽标 / 快捷键 ===================== */
+/* 筛选胶囊 */
+.pill {
+  flex: none;
+  height: var(--h-sm);
+  padding: 0 var(--sp-3);
+  border: 0;
+  border-radius: var(--r-full);
+  background: none;
+  color: var(--text-secondary);
+  font-size: var(--fs-sm);
+  cursor: pointer;
+}
+.pill:hover {
+  background: var(--hover);
+}
+.pill.on {
+  background: var(--selected);
+  color: var(--accent);
+}
+
+/* 可移除的标签 */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: var(--h-sm);
+  padding: 0 var(--sp-1) 0 var(--sp-3);
+  border-radius: var(--r-full);
+  background: var(--selected);
+  color: var(--accent);
+  font-size: var(--fs-sm);
+}
+.chip button {
+  border: 0;
+  background: none;
+  color: inherit;
+  padding: 0 var(--sp-1);
+  cursor: pointer;
+}
+
+.badge {
+  display: inline-block;
+  flex: none;
+  padding: 1px var(--sp-1h);
+  border-radius: var(--r-xs);
+  background: var(--hover);
+  color: var(--text-secondary);
+  font-size: var(--fs-xs);
+  font-weight: normal;
+  line-height: 16px;
+}
+
+kbd {
+  display: inline-block;
+  padding: 0 5px;
+  border-radius: var(--r-xs);
+  background: var(--hover);
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: var(--fs-xs);
+  line-height: 18px;
+}
+
+code,
+.mono {
+  font-family: var(--font-mono);
+}
+
+/* ===================== 列表 ===================== */
+/* 列表容器内边距 4 + 行圆角 8 = 窗口圆角 12 */
+.list {
+  list-style: none;
+  padding: var(--sp-1);
+  overflow-y: auto;
+}
+.list-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: 0 var(--sp-3);
+  border-radius: var(--r-md);
+}
+.list-row.selected {
+  background: var(--selected);
+}
+
+/* ===================== 栏 ===================== */
+/* 标题栏 / 工具栏 */
+.bar {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex: none;
+  min-height: var(--h-bar);
+  padding: var(--sp-1h) var(--sp-3);
+  border-bottom: 1px solid var(--border);
+  font-size: var(--fs-md);
+}
+/* 底部状态栏 / 快捷键提示 */
+.statusbar {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  flex: none;
+  height: var(--h-status);
+  padding: 0 var(--sp-4);
+  border-top: 1px solid var(--border);
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+}
+.statusbar > span {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+}
+
+/* 分隔线 */
+.vsep {
+  flex: none;
+  width: 1px;
+  height: 16px;
+  margin: 0 var(--sp-1);
+  background: var(--border);
+}
+.hsep {
+  height: 1px;
+  margin: var(--sp-1) var(--sp-1h);
+  background: var(--border);
+}
+
+.spacer {
+  flex: 1;
+}
+
+/* ===================== 卡片 ===================== */
+.card {
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+}
+
+/* ===================== 浮层 ===================== */
+/* 菜单：容器内边距 6 + 菜单项圆角 6 = 外圆角 12 */
+.menu {
+  display: flex;
+  flex-direction: column;
+  min-width: 220px;
+  padding: var(--sp-1h);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-md);
+}
+.menu > button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  height: var(--h-md);
+  padding: 0 var(--sp-2);
+  border: 0;
+  border-radius: var(--r-sm);
+  background: none;
+  color: var(--text);
+  font-size: var(--fs-md);
+  text-align: left;
+  cursor: pointer;
+}
+.menu > button.active {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+.menu > button.active kbd {
+  background: none;
+  color: inherit;
+}
+.menu > button.danger:not(.active) {
+  color: var(--danger);
+}
+
+/* 遮罩 + 弹窗 */
+.scrim {
+  position: absolute;
+  inset: 0;
+  background: var(--scrim);
+}
+.sheet {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-lg);
+}
+.sheet-head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1h);
+  font-size: var(--fs-md);
+}
+.sheet-head strong {
+  margin-right: auto;
+  font-weight: var(--fw-semibold);
+}
+
+/* 轻提示 */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 40px;
+  transform: translateX(-50%);
+  max-width: 80%;
+  padding: var(--sp-2) var(--sp-4);
+  border-radius: var(--r-md);
+  background: var(--toast-bg);
+  color: #fff;
+  font-size: var(--fs-sm);
+  box-shadow: var(--shadow-md);
+  pointer-events: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.toast.error {
+  background: color-mix(in srgb, var(--danger) 92%, #000);
+}
+
+/* 提示条 */
+.banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--r-lg);
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
+  font-size: var(--fs-sm);
+}
+
+/* ===================== 状态文字 ===================== */
+.empty {
+  display: grid;
+  place-items: center;
+  padding: 0 var(--sp-5);
+  color: var(--text-secondary);
+  font-size: var(--fs-md);
+  text-align: center;
+}
+.muted {
+  color: var(--text-secondary);
+}
+.ok {
+  color: var(--success);
+}
+.warn-text {
+  color: var(--warning);
+}
+.err {
+  color: var(--danger);
+}
+.hint {
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+}
