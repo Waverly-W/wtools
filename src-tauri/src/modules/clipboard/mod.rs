@@ -184,6 +184,26 @@ impl ClipboardService {
         })
     }
 
+    /// 把 wtools 自己产生的新文本（OCR 选中文字、操作输出等）记入历史。
+    /// 写剪贴板时会记下 changeCount 让监听线程跳过（避免来源变成 wtools、避免重复），
+    /// 所以这类内容需要在这里主动入库；已有相同内容时只会更新使用时间并置顶。
+    pub fn record_text(&self, app: &AppHandle, text: &str, source: &str) {
+        if text.trim().is_empty() {
+            return;
+        }
+        let cfg = app.state::<ConfigStore>().get().clipboard;
+        if !cfg.enabled {
+            return;
+        }
+        let content = Content::Text(text.to_string());
+        match self.save(&content, Some(source), None, cfg.max_items, cfg.max_days) {
+            Ok(()) => {
+                let _ = app.emit_to(window::LAUNCHER, "clipboard:changed", ());
+            }
+            Err(e) => eprintln!("[clipboard] 保存失败: {e}"),
+        }
+    }
+
     /// 写入系统剪贴板并记下 changeCount
     fn write(&self, content: &Content) -> Result<(), String> {
         let cc = pasteboard::write(content)?;

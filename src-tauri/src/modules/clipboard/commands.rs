@@ -190,9 +190,10 @@ pub fn clipboard_paste(ids: Vec<i64>, paste: bool, app: AppHandle, svc: Svc<'_>)
     svc.deliver(&app, contents, paste)
 }
 
-/// 粘贴或复制任意文本（OCR 选中的文字、操作的输出等）
+/// 粘贴或复制任意文本（OCR 选中的文字、操作的输出等），同时记入剪贴板历史
 #[tauri::command]
 pub fn clipboard_paste_text(text: String, paste: bool, app: AppHandle, svc: Svc<'_>) -> Result<(), String> {
+    svc.record_text(&app, &text, "wtools");
     svc.deliver(&app, vec![Content::Text(text)], paste)
 }
 

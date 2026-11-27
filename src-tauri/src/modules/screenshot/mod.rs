@@ -365,7 +365,7 @@ pub mod commands {
         .map_err(|e| e.to_string())?
     }
 
-    /// 复制或粘贴文字（识别结果、颜色值），同时结束截图
+    /// 复制或粘贴文字（识别结果、颜色值），同时结束截图；文字会记入剪贴板历史
     #[tauri::command]
     pub fn shot_text(
         text: String,
@@ -374,6 +374,7 @@ pub mod commands {
         svc: tauri::State<'_, Arc<ClipboardService>>,
     ) -> Result<(), String> {
         finish(&app, false);
+        svc.record_text(&app, &text, "截图");
         svc.deliver(&app, vec![pasteboard::Content::Text(text)], paste)
     }
 }
