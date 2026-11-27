@@ -17,6 +17,9 @@ use tauri::{AppHandle, Manager};
 
 use crate::config::ConfigStore;
 
+/// wtools 自身的 bundle id（与 tauri.conf.json 的 identifier 一致）
+pub const OWN_BUNDLE_ID: &str = "com.wtools.app";
+
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 #[serde(default)]
 pub struct EnhanceConfig {
@@ -177,12 +180,21 @@ pub mod commands {
     pub struct RunningApp {
         bundle_id: String,
         name: String,
+        /// wtools 自己：可以单独设置输入法，但不出现在「排除的应用」里
+        own: bool,
     }
 
-    /// 正在运行的普通应用（用于添加应用规则 / 排除的应用）
+    /// 正在运行的普通应用（用于添加应用规则 / 排除的应用），wtools 自己排在第一个
+    ///
+    /// wtools 是菜单栏应用（Accessory），不在「普通应用」之列，需要单独加上，
+    /// 好让搜索框等窗口也能单独设置输入法。
+    ///
+    /// 同一应用可能开了多个实例（如企业微信多开），按 bundle id 去重：
+    /// 前端用 bundle id 作列表 key，重复 key 会让 Svelte 抛错、整个下拉列表渲染为空。
     #[tauri::command]
     pub fn enhance_running_apps() -> Vec<RunningApp> {
         use objc2_app_kit::{NSApplicationActivationPolicy, NSWorkspace};
+        let mut seen = std::collections::HashSet::new();
         let mut apps: Vec<RunningApp> = NSWorkspace::sharedWorkspace()
             .runningApplications()
             .iter()
@@ -191,11 +203,13 @@ pub mod commands {
                 Some(RunningApp {
                     bundle_id: a.bundleIdentifier()?.to_string(),
                     name: a.localizedName().map(|s| s.to_string()).unwrap_or_default(),
+                    own: false,
                 })
             })
-            .filter(|a| a.bundle_id != "com.wtools.app")
+            .filter(|a| a.bundle_id != OWN_BUNDLE_ID && seen.insert(a.bundle_id.clone()))
             .collect();
         apps.sort_by(|a, b| a.name.cmp(&b.name));
+        apps.insert(0, RunningApp { bundle_id: OWN_BUNDLE_ID.into(), name: "wtools".into(), own: true });
         apps
     }
 

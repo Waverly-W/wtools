@@ -189,6 +189,9 @@ struct State {
     icons: HashMap<String, Option<Retained<NSImage>>>,
     /// 每次显示递增，用于「短暂显示」的延时隐藏
     show_seq: u64,
+    /// 切到 wtools 自己的窗口前正在用的输入法（仅当为 wtools 单独设置了输入法、发生了切换时记录），
+    /// 回到其他应用且该应用没有可用的目标输入法时恢复它
+    before_own: Option<String>,
 }
 
 thread_local! {
@@ -224,6 +227,7 @@ fn apply_main(cfg: InputSourceConfig) {
                     indicator: None,
                     icons: HashMap::new(),
                     show_seq: 0,
+                    before_own: None,
                 })
             }
         }
@@ -278,31 +282,48 @@ fn register_observers(_mtm: MainThreadMarker) {
     }
 }
 
+/// 为该应用单独设置的输入法
+fn rule_source(cfg: &InputSourceConfig, bundle: &str) -> Option<String> {
+    cfg.rules.iter().find(|r| r.bundle_id == bundle).and_then(|r| r.source.clone())
+}
+
 fn on_activate(app: &NSRunningApplication, switched: bool) {
     let pid = app.processIdentifier();
     let bundle = app.bundleIdentifier().map(|s| s.to_string()).unwrap_or_default();
     let own = pid == std::process::id() as i32;
+    let current = if own { current_source().map(|c| c.id) } else { None };
     let target = with_state(|st| {
         if !st.cfg.enabled {
             return None;
         }
         st.observer = None;
         if own {
-            // 自己的窗口（搜索框等）不处理
+            // 自己的窗口（搜索框、设置等）：只认单独设置的输入法，不套用默认输入法，也不记录「上次的输入法」
             st.front = None;
-            return None;
+            let src = rule_source(&st.cfg, super::OWN_BUNDLE_ID);
+            if src.is_some() && src != current && st.before_own.is_none() {
+                st.before_own = current.clone();
+            }
+            return src;
         }
+        let before_own = st.before_own.take();
         st.front = Some((pid, bundle.clone()));
-        let rule = st.cfg.rules.iter().find(|r| r.bundle_id == bundle);
-        match rule.and_then(|r| r.source.clone()) {
+        match rule_source(&st.cfg, &bundle) {
             Some(s) => Some(s),
             None if st.cfg.remember_last => st.last.get(&bundle).cloned().or_else(|| st.cfg.default_source.clone()),
             None => st.cfg.default_source.clone(),
         }
+        // 这个应用没有目标输入法时，恢复进入 wtools 之前的输入法
+        .or(before_own)
     })
     .flatten();
     if own {
         hide_indicator();
+        if let Some(id) = &target {
+            if current.as_ref() != Some(id) {
+                select_source(id);
+            }
+        }
         return;
     }
     if !with_state(|st| st.cfg.enabled).unwrap_or(false) {

@@ -278,7 +278,7 @@
             <select class="select" bind:value={ruleApp}>
               <option value="">选择正在运行的应用…</option>
               {#each apps.filter((a) => !cfg!.input_source.rules.some((r) => r.bundle_id === a.bundle_id)) as a (a.bundle_id)}
-                <option value={a.bundle_id}>{a.name}</option>
+                <option value={a.bundle_id}>{a.own ? `${a.name}（搜索框、设置等窗口）` : a.name}</option>
               {/each}
             </select>
             <button class="btn" disabled={!ruleApp} onclick={addRule}>添加</button>
@@ -358,7 +358,7 @@
           <div class="btns">
             <select class="select" bind:value={excludeApp}>
               <option value="">选择正在运行的应用…</option>
-              {#each apps.filter((a) => !cfg!.switcher.excluded.includes(a.bundle_id)) as a (a.bundle_id)}
+              {#each apps.filter((a) => !a.own && !cfg!.switcher.excluded.includes(a.bundle_id)) as a (a.bundle_id)}
                 <option value={a.bundle_id}>{a.name}</option>
               {/each}
             </select>

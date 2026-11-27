@@ -174,4 +174,6 @@ export interface EnhanceState {
 export interface RunningApp {
   bundle_id: string;
   name: string;
+  /** wtools 自己（搜索框、设置等窗口） */
+  own: boolean;
 }

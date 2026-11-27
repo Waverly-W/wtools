@@ -107,9 +107,10 @@ const handlers: Record<string, Fn> = {
   enhance_retry: () => enhanceState(),
   enhance_import: ({ feature }) => ({ state: enhanceState(), message: `已导入（模拟）：${feature}` }),
   enhance_running_apps: () => [
-    { bundle_id: "com.google.Chrome", name: "Google Chrome" },
-    { bundle_id: "com.apple.Terminal", name: "终端" },
-    { bundle_id: "com.microsoft.edgemac", name: "Microsoft Edge" },
+    { bundle_id: "com.wtools.app", name: "wtools", own: true },
+    { bundle_id: "com.google.Chrome", name: "Google Chrome", own: false },
+    { bundle_id: "com.apple.Terminal", name: "终端", own: false },
+    { bundle_id: "com.microsoft.edgemac", name: "Microsoft Edge", own: false },
   ],
   enhance_open_accessibility: () => null,
   enhance_quit_original: () => null,
